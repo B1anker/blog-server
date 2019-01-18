@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
-import * as fs from 'fs';
 import * as NodeRSA from 'node-rsa';
 
+import { AUTH } from '@/app.config';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -19,12 +19,9 @@ export class AuthService {
   constructor (
     @Inject(forwardRef(() => UsersService)) private readonly usersService: UsersService,
     private readonly jwt: JwtService) {
-    this.rsa = new NodeRSA({b: 1024});
-    this.rsa.setOptions({encryptionScheme: 'pkcs1'});
-    this.publicKey = this.rsa.exportKey('pkcs8-public');
-    this.privateKey = this.rsa.exportKey('pkcs8-private');
-    fs.writeFileSync('./private.key', this.privateKey);
-    fs.writeFileSync('./public.key', this.publicKey);
+      this.rsa = new NodeRSA();
+      this.publicKey = this.rsa.importKey(AUTH.publicKey, 'pkcs8-public').exportKey('pkcs8-public');
+      this.privateKey = this.rsa.importKey(AUTH.privateKey, 'pkcs8-private').exportKey('pkcs8-private');
   }
 
   public getPrivateKey (): string {

@@ -1,4 +1,4 @@
-import config from '@/app.config';
+import { AUTH } from '@/app.config';
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -13,9 +13,9 @@ import { AuthStrategy } from './auth.strategy';
     forwardRef(() => UsersModule),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secretOrPrivateKey: config.AUTH.privateKey,
+      secretOrPrivateKey: AUTH.privateKey,
       signOptions: {
-        expiresIn: config.AUTH.expiresIn
+        expiresIn: AUTH.expiresIn
       }
     }) ],
   controllers: [ AuthController ],

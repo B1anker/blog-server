@@ -2,77 +2,82 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## 描述
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest)的cli
 
-## Installation
+## 应用结构
+
+- 入口
+
+  * `main.ts`：引入配置，启动主程序，引入各种全局服务
+  * `app.module.ts`：主程序根模块，负责各业务模块的聚合
+  * `app.controller.ts`：主程序根控制器
+  * `app.config.ts`：主程序配置，数据库、程序、第三方，一切可配置项
+  * `app.environment.ts：`全局环境变量
+
+- 请求处理流程
+
+  1. `request`：收到请求
+  2. `middleware`：中间件过滤（跨域、来源校验等处理）
+  3. `guard`：守卫过滤（鉴权）
+  4. `interceptor:before`：数据流拦截器（本应用为空，即：无处理）
+  5. `pipe`：参数提取（校验）器
+  6. `controller`：业务控制器
+  7. `service`：业务服务
+  8. `interceptor:after`：数据流拦截器（格式化数据、错误）
+  9. `filter`：捕获以上所有流程中出现的异常，如果任何一个环节抛出异常，则返回错误
+
+- 鉴权处理流程
+  1. `guard`：守卫 分析请求
+  2. `guard.canActivate`：继承处理
+  3. `JwtStrategy.validate`：调用鉴权服务
+
+- 鉴权级别
+  * 任何敏感高级操作（CUD）都会校验必须的 Token
+
+- 守卫 guard
+  * 关键敏感信息请求会使用Role守卫鉴权
+
+- 中间件 middlewares
+  * Logger 中间件，用于打印请求
+
+## 安装依赖
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## 启动项目
 
 ```bash
-# development
+# 开发环境
 $ npm run start
 
-# watch mode
+# 观察模式
 $ npm run start:dev
 
-# incremental rebuild (webpack)
+# webpack构建
 $ npm run webpack
 $ npm run start:hmr
 
-# production mode
+# 生产环境
 $ npm run start:prod
 ```
 
-## Test
+## 测试
 
 ```bash
-# unit tests
+# 单元测试
 $ npm run test
 
-# e2e tests
+# e2e测试
 $ npm run test:e2e
 
-# test coverage
+# 测试覆盖
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 

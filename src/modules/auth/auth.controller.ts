@@ -18,16 +18,21 @@ export class AuthController {
     @Inject(forwardRef(() => UsersService)) private readonly userService: UsersService ) {}
 
   @Post('public')
-  public getPublicKey (): string {
-    return this.authService.getPublicKey();
+  public getPublicKey () {
+    return {
+      key: this.authService.getPublicKey(),
+      message: 'ok'
+    };
   }
 
   @Post('private')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  public getPrivateKey (): string {
-    const key = this.authService.getPrivateKey();
-    return key;
+  public getPrivateKey () {
+    return {
+      key: this.authService.getPrivateKey(),
+      message: 'ok'
+    };
   }
 
   @Post('login')
@@ -35,12 +40,13 @@ export class AuthController {
     try {
       const valid: boolean = await this.authService.verify(auth.account, auth.password);
       if (valid) {
-        const user = omit(await this.userService.find(auth.id), [
+        const user = omit(await this.userService.find(auth.account), [
           'deleted',
           'password',
           'id'
         ]);
         return {
+          message: 'ok',
           jwt: this.authService.createJwt(user)
         };
       }
@@ -53,7 +59,10 @@ export class AuthController {
   @Post('check')
   public async check (@Body() { token }) {
     try {
-      return this.authService.verifyJwt(token);
+      return {
+        message: 'ok',
+        data: this.authService.verifyJwt(token)
+      };
     } catch (err) {
       throw new NotAcceptableException('Verify Failed');
     }
@@ -61,11 +70,21 @@ export class AuthController {
 
   @Post('encrypt')
   public async encryptRSA (@Body() { password }) {
-    return await this.authService.encryptRSA(password);
+    return {
+      message: 'ok',
+      data: {
+        encrypted: await this.authService.encryptRSA(password)
+      }
+    };
   }
 
   @Post('decrypt')
   public async decryptRSA (@Body() { password }) {
-    return await this.authService.decryptRSA(password);
+    return {
+      message: 'ok',
+      data: {
+        decrypted: await this.authService.decryptRSA(password)
+      }
+    };
   }
 }

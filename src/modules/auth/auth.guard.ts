@@ -1,10 +1,4 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-/**
- * JwtAuth guard.
- * @file 鉴权卫士
- * @module guard/auth
- * @author b1anker <https://github.com/b1anker>
- */
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
