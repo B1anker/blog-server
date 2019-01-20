@@ -4,6 +4,7 @@ import { AUTH } from '@/app.config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
+import { Request } from 'express';
 import { UsersService } from '../user/user.service';
 import { JwtPayload } from './jwtPayload';
 
@@ -11,7 +12,10 @@ import { JwtPayload } from './jwtPayload';
 export class AuthStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userService: UsersService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
+      jwtFromRequest(req: Request) {
+        const token: string = req.cookies.jwt;
+        return token;
+      },
       secretOrKey: AUTH.privateKey,
     });
   }

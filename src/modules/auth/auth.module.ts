@@ -17,7 +17,8 @@ import { AuthStrategy } from './auth.strategy';
       signOptions: {
         expiresIn: AUTH.expiresIn
       }
-    }) ],
+    })
+  ],
   controllers: [ AuthController ],
   providers: [ AuthService, AuthStrategy ],
   exports: [ AuthService ]

@@ -18,8 +18,14 @@ const getPublicKey = (): string => {
   }
 };
 
+export const updateAUTH = () => {
+  AUTH.privateKey = getPrivateKey();
+  AUTH.publicKey = getPublicKey();
+};
+
 export const AUTH = {
-  expiresIn: 3600,
+  expiresIn: 1000 * 60 * 15,
+  renew: 300,
   privateKey: getPrivateKey(),
   publicKey: getPublicKey(),
   privateKeyPath: pathResolve('../private.key'),

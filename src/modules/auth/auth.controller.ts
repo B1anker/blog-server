@@ -1,9 +1,19 @@
+import { AUTH } from '@/app.config';
+import { Response } from 'express';
 import { omit } from 'lodash';
 
 import { Roles } from '@/decorators/roles';
 import { RolesGuard } from '@/guards/roles';
 import {
-    Body, Controller, forwardRef, Inject, NotAcceptableException, Post, UseGuards, ValidationPipe
+  Body,
+  Controller,
+  forwardRef,
+  Inject,
+  NotAcceptableException,
+  Post,
+  Res,
+  UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { UsersService } from '../user/user.service';
@@ -13,55 +23,66 @@ import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor (
+  constructor(
     private readonly authService: AuthService,
-    @Inject(forwardRef(() => UsersService)) private readonly userService: UsersService ) {}
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
+  ) {}
 
   @Post('public')
-  public getPublicKey () {
+  public getPublicKey() {
     return {
       key: this.authService.getPublicKey(),
-      message: 'ok'
+      message: 'ok',
     };
   }
 
   @Post('private')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  public getPrivateKey () {
+  public getPrivateKey() {
     return {
       key: this.authService.getPrivateKey(),
-      message: 'ok'
+      message: 'ok',
     };
   }
 
   @Post('login')
-  public async verifyAuth (@Body(new ValidationPipe()) auth: AuthDto) {
+  public async verifyAuth(
+    @Body(new ValidationPipe()) auth: AuthDto,
+    @Res() res: Response,
+  ) {
     try {
-      const valid: boolean = await this.authService.verify(auth.account, auth.password);
+      const valid: boolean = await this.authService.verify(
+        auth.account,
+        auth.password,
+      );
       if (valid) {
         const user = omit(await this.userService.find(auth.account), [
           'deleted',
           'password',
-          'id'
+          'id',
         ]);
-        return {
-          message: 'ok',
-          jwt: this.authService.createJwt(user)
-        };
+        res.cookie('jwt', this.authService.createJwt(user), {
+          maxAge: AUTH.expiresIn
+        });
+        res.send({
+          message: 'ok'
+        });
+      } else {
+        throw new NotAcceptableException('Account or password is not correct');
       }
-      throw new NotAcceptableException('Account or password is not correct');
     } catch (err) {
       throw new NotAcceptableException('Account or password is not correct');
     }
   }
 
   @Post('check')
-  public async check (@Body() { token }) {
+  public async check(@Body() { token }) {
     try {
       return {
         message: 'ok',
-        data: this.authService.verifyJwt(token)
+        data: this.authService.verifyJwt(token),
       };
     } catch (err) {
       throw new NotAcceptableException('Verify Failed');
@@ -69,22 +90,22 @@ export class AuthController {
   }
 
   @Post('encrypt')
-  public async encryptRSA (@Body() { password }) {
+  public async encryptRSA(@Body() { password }) {
     return {
       message: 'ok',
       data: {
-        encrypted: await this.authService.encryptRSA(password)
-      }
+        encrypted: await this.authService.encryptRSA(password),
+      },
     };
   }
 
   @Post('decrypt')
-  public async decryptRSA (@Body() { password }) {
+  public async decryptRSA(@Body() { password }) {
     return {
       message: 'ok',
       data: {
-        decrypted: await this.authService.decryptRSA(password)
-      }
+        decrypted: await this.authService.decryptRSA(password),
+      },
     };
   }
 }

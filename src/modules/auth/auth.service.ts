@@ -19,9 +19,16 @@ export class AuthService {
   constructor (
     @Inject(forwardRef(() => UsersService)) private readonly usersService: UsersService,
     private readonly jwt: JwtService) {
-      this.rsa = new NodeRSA();
-      this.publicKey = this.rsa.importKey(AUTH.publicKey, 'pkcs8-public').exportKey('pkcs8-public');
-      this.privateKey = this.rsa.importKey(AUTH.privateKey, 'pkcs8-private').exportKey('pkcs8-private');
+      this.rsa = new NodeRSA({
+        b: 1024
+      });
+      this.rsa.setOptions({
+        encryptionScheme: 'pkcs1'
+      });
+      this.rsa.importKey(AUTH.publicKey);
+      this.rsa.importKey(AUTH.privateKey);
+      this.publicKey = AUTH.publicKey;
+      this.privateKey = AUTH.privateKey;
   }
 
   public getPrivateKey (): string {
@@ -32,9 +39,9 @@ export class AuthService {
     return this.publicKey;
   }
 
-  public async verify (usernname: string, password: string): Promise<boolean> {
+  public async verify (account: string, password: string): Promise<boolean> {
     const decryptedRSAPassword: string = this.decryptRSA(password);
-    const user: Users = await this.usersService.find(usernname);
+    const user: Users = await this.usersService.find(account);
     return await this.compare(decryptedRSAPassword, user.password);
   }
 

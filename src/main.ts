@@ -1,4 +1,5 @@
 import * as compression from 'compression';
+import * as CookieParser from 'cookie-parser'
 
 import { NestFactory } from '@nestjs/core';
 
@@ -13,6 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix(API.prefix);
   // 添加gzip压缩
   app.use(compression());
+  app.use(CookieParser());
   await app.listen(3000);
 }
 bootstrap();
