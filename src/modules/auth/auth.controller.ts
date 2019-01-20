@@ -1,6 +1,6 @@
 import { AUTH } from '@/app.config';
 import { Response } from 'express';
-import { omit } from 'lodash';
+import { pick } from 'lodash';
 
 import { Roles } from '@/decorators/roles';
 import { RolesGuard } from '@/guards/roles';
@@ -13,7 +13,7 @@ import {
   Post,
   Res,
   UseGuards,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
 
 import { UsersService } from '../user/user.service';
@@ -32,7 +32,7 @@ export class AuthController {
   @Post('public')
   public getPublicKey() {
     return {
-      key: this.authService.getPublicKey(),
+      data: this.authService.getPublicKey(),
       message: 'ok',
     };
   }
@@ -42,7 +42,7 @@ export class AuthController {
   @Roles('ADMIN')
   public getPrivateKey() {
     return {
-      key: this.authService.getPrivateKey(),
+      data: this.authService.getPrivateKey(),
       message: 'ok',
     };
   }
@@ -58,16 +58,19 @@ export class AuthController {
         auth.password,
       );
       if (valid) {
-        const user = omit(await this.userService.find(auth.account), [
-          'deleted',
-          'password',
-          'id',
-        ]);
-        res.cookie('jwt', this.authService.createJwt(user), {
+        const user = await this.userService.find(auth.account);
+        res.cookie('jwt', this.authService.createJwt(pick(user, [
+          'id'
+        ])), {
           maxAge: AUTH.expiresIn
         });
         res.send({
-          message: 'ok'
+          message: 'ok',
+          data: pick(user, [
+            'id',
+            'account',
+            'roles'
+          ])
         });
       } else {
         throw new NotAcceptableException('Account or password is not correct');

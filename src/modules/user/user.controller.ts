@@ -3,10 +3,12 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   ValidationPipe,
 } from '@nestjs/common';
+import { pick } from 'lodash';
 
 import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
 
@@ -19,6 +21,24 @@ export class UsersController {
     return {
       message: 'ok',
       data: this.usersService.findAll(),
+    };
+  }
+
+  @Get(':id')
+  public async find(@Param() params) {
+    const user = await this.usersService.find(Number(params.id));
+    if (user) {
+      return {
+        message: 'ok',
+        data: pick(user, [
+          'account',
+          'roles'
+        ])
+      };
+    }
+    return {
+      message: 'ok',
+      data: null
     };
   }
 

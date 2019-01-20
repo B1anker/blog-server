@@ -56,7 +56,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     jwtUser = Buffer.from(jwtUser, 'base64').toString();
     if (dayjs().unix() - Number(JSON.parse(jwtUser).exp) <= AUTH.renew) {
       const token: string = this.authService.createJwt(
-        pick(user, ['account', 'roles']),
+        pick(user, ['id']),
       );
       this.response.cookie('jwt', token, {
         maxAge: AUTH.expiresIn,

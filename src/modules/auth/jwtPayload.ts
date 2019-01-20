@@ -1,4 +1,3 @@
 export interface JwtPayload {
-  account: string;
-  roles: string[];
+  id: number;
 }
