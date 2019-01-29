@@ -6,7 +6,7 @@ export class Posts {
   @PrimaryColumn()
   id: string;
 
-  @Column({ length: 32, unique: true })
+  @Column({ length: 64, unique: true })
   title: string;
 
   @Column('int')

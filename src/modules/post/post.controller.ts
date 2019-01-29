@@ -24,7 +24,7 @@ export class PostController {
 
   @Post()
   public async create(@Body(new ValidationPipe()) post: CreatePostDto) {
-    await this.postService.createPost(post);
+    await this.postService.create(post);
     return {
       message: 'ok'
     };
@@ -32,7 +32,7 @@ export class PostController {
 
   @Put()
   public async update(@Body(new ValidationPipe()) post: UpdatePostDto) {
-    await this.postService.updatePost(post);
+    await this.postService.update(post);
     return {
       message: 'ok'
     };
@@ -40,7 +40,7 @@ export class PostController {
 
   @Delete(':pid')
   public async delete(@Param() params) {
-    await this.postService.deletePost(params.pid);
+    await this.postService.delete(params.pid);
     return {
       message: 'ok'
     };

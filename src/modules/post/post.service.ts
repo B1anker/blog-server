@@ -31,7 +31,7 @@ export class PostService {
     return post;
   }
 
-  public async createPost (createPostDto: CreatePostDto) {
+  public async create (createPostDto: CreatePostDto) {
     const post = new Posts();
     const now = dayjs().unix();
     post.created = now;
@@ -44,7 +44,7 @@ export class PostService {
     return post;
   }
 
-  public async updatePost (updatePostDto: UpdatePostDto) {
+  public async update (updatePostDto: UpdatePostDto) {
     const post = await this.find(updatePostDto.id);
     Object.assign(post, updatePostDto);
     post.updated = dayjs().unix();
@@ -52,7 +52,7 @@ export class PostService {
     return post;
   }
 
-  public async deletePost (id: string) {
+  public async delete (id: string) {
     const post = await this.find(id);
     post.deleted = true;
     await this.repository.save(post);
