@@ -26,6 +26,7 @@
     "@nestjs/passport": "^5.1.0",
     "@nestjs/typeorm": "^5.2.2",
     "bcrypt": "^3.0.3",
+    "bson-objectid": "^1.2.4",
     "chalk": "^2.4.2",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",

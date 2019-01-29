@@ -14,7 +14,7 @@ import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
 import { Users } from './user.entity';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(Users) private readonly repository: Repository<Users>,
     @Inject(forwardRef(() => AuthService))

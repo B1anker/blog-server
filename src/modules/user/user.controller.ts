@@ -1,4 +1,4 @@
-import { UsersService } from '@/modules/user/user.service';
+import { UserService } from '@/modules/user/user.service';
 import {
   Body,
   Controller,
@@ -13,20 +13,20 @@ import { pick } from 'lodash';
 import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
 
 @Controller('user')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   public findAll() {
     return {
       message: 'ok',
-      data: this.usersService.findAll(),
+      data: this.userService.findAll(),
     };
   }
 
   @Get(':id')
   public async find(@Param() params) {
-    const user = await this.usersService.find(Number(params.id));
+    const user = await this.userService.find(Number(params.id));
     if (user) {
       return {
         message: 'ok',
@@ -46,7 +46,7 @@ export class UsersController {
   public createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return {
       message: 'ok',
-      data: this.usersService.createUser(createUserDto),
+      data: this.userService.createUser(createUserDto),
     };
   }
 
@@ -54,7 +54,7 @@ export class UsersController {
   public async updateAccount(
     @Body(new ValidationPipe()) accountDto: AccoutDto,
   ) {
-    await this.usersService.updateAccount(accountDto);
+    await this.userService.updateAccount(accountDto);
     return {
       message: 'ok',
     };
@@ -64,7 +64,7 @@ export class UsersController {
   public async updatePassword(
     @Body(new ValidationPipe()) passwordDto: PasswordDto,
   ) {
-    await this.usersService.updatePassword(passwordDto);
+    await this.userService.updatePassword(passwordDto);
     return {
       message: 'ok',
     };
@@ -72,7 +72,7 @@ export class UsersController {
 
   @Put('role')
   public async updateRole(@Body(new ValidationPipe()) roleDto: RoleDto) {
-    await this.usersService.updateRole(roleDto);
+    await this.userService.updateRole(roleDto);
     return {
       message: 'ok',
     };

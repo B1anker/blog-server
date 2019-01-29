@@ -6,7 +6,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { Users } from '../user/user.entity';
-import { UsersService } from '../user/user.service';
+import { UserService } from '../user/user.service';
 import { JwtPayload } from './jwtPayload';
 
 const SALT_WORK_FACTOR: number = 10;
@@ -17,7 +17,7 @@ export class AuthService {
   private privateKey: string;
   private publicKey: string;
   constructor (
-    @Inject(forwardRef(() => UsersService)) private readonly usersService: UsersService,
+    @Inject(forwardRef(() => UserService)) private readonly userService: UserService,
     private readonly jwt: JwtService) {
       this.rsa = new NodeRSA({
         b: 1024
@@ -41,7 +41,7 @@ export class AuthService {
 
   public async verify (account: string, password: string): Promise<boolean> {
     const decryptedRSAPassword: string = this.decryptRSA(password);
-    const user: Users = await this.usersService.find(account);
+    const user: Users = await this.userService.find(account);
     return await this.compare(decryptedRSAPassword, user.password);
   }
 

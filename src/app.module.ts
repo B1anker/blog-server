@@ -1,5 +1,6 @@
 import LoggerMiddleware from '@/middlewares/logger';
 import { AuthModule } from '@/modules/auth/auth.module';
+import { PostModule } from '@/modules/post/post.module';
 import { UsersModule } from '@/modules/user/user.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,7 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forRoot(),
     UsersModule,
-    AuthModule
+    AuthModule,
+    PostModule
   ]
 })
 export class AppModule implements NestModule {

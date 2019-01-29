@@ -16,7 +16,7 @@ import {
   ValidationPipe
 } from '@nestjs/common';
 
-import { UsersService } from '../user/user.service';
+import { UserService } from '../user/user.service';
 import { AuthDto } from './auth.dto';
 import { JwtAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -25,8 +25,8 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    @Inject(forwardRef(() => UsersService))
-    private readonly userService: UsersService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   @Post('public')
