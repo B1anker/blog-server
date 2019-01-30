@@ -1,4 +1,5 @@
 import * as compression from 'compression';
+import * as history from 'connect-history-api-fallback';
 import * as CookieParser from 'cookie-parser';
 import * as path from 'path';
 
@@ -17,6 +18,9 @@ async function bootstrap() {
   // 添加gzip压缩
   app.use(compression());
   app.use(CookieParser());
+  app.use(history({
+    '^/': '/'
+  }));
   await app.listen(3000);
 }
 bootstrap();
