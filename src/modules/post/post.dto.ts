@@ -8,7 +8,7 @@ export class CreatePostDto {
   readonly tags: string[];
 
   @IsArray()
-  readonly categories: string[];
+  readonly categories: number[];
 
   @IsString()
   readonly summary: string;

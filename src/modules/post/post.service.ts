@@ -21,12 +21,15 @@ export class PostService {
     const list = await this.repository.find({
       relations: ['categories'],
     });
-    return list.filter(({ deleted }) => !deleted);
+    return list.filter(({ deleted }) => !deleted).map((l) => {
+      l.categories.forEach((category) => delete category.deleted);
+      return l;
+    });
   }
 
   public async find(id: string): Promise<Posts> {
-    const post = await this.repository.findOne({
-      id,
+    const post = await this.repository.findOne(id, {
+      relations: ['categories'],
     });
     if (post.deleted) {
       return null;
@@ -43,13 +46,13 @@ export class PostService {
         await this.categorySevice.find(Number(createPostDto.categories[i])),
       );
     }
+    Object.assign(post, createPostDto);
     post.created = now;
     post.updated = now;
     post.views = 0;
     post.id = ObjectId.generate();
     post.deleted = false;
     post.categories = categories;
-    Object.assign(post, createPostDto);
     await this.repository.save(post);
     return post;
   }
@@ -63,7 +66,6 @@ export class PostService {
       );
     }
     Object.assign(post, updatePostDto);
-    console.log(categories);
     post.categories = categories;
     post.updated = dayjs().unix();
     await this.repository.save(post);
