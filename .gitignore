@@ -3,3 +3,4 @@ package-lock.json
 .DS_Store
 src/private.key
 src/public.key
+dist
