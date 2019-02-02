@@ -1,10 +1,10 @@
 import ObjectId from 'bson-objectid';
-import { ConnectionOptions, createConnection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { Categories } from '../category/category.entity';
 import { CategoryService } from '../category/category.service';
 import { CreatePostDto, UpdatePostDto } from './post.dto';

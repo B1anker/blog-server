@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { CreateCategoryDto, UpdateCategoryDto } from './category.dto';
 import { Categories } from './category.entity';
 
