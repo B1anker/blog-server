@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+import { Categories } from '../category/category.entity';
 
 @Entity()
 export class Posts {
@@ -21,9 +22,6 @@ export class Posts {
   @Column('simple-array')
   tags: string[];
 
-  @Column('simple-array')
-  categories: string[];
-
   @Column('text')
   summary: string;
 
@@ -32,4 +30,8 @@ export class Posts {
 
   @Column({ type: 'boolean', default: false })
   deleted: boolean;
+
+  @ManyToMany((type) => Categories, (category) => category.name)
+  @JoinTable()
+  categories: Categories[];
 }
