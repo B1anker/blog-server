@@ -1,5 +1,6 @@
 import chalk from 'chalk';
-import dayjs from 'dayjs';
+
+const dayjs = require('dayjs');
 
 import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
 
