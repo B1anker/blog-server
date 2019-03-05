@@ -21,6 +21,9 @@ export class PostService {
     const list = await this.repository.find({
       relations: ['categories'],
     });
+    list.sort((a, b) => {
+      return b.created - a.created;
+    });
     return list.filter(({ deleted }) => !deleted).map((l) => {
       l.categories.forEach((category) => delete category.deleted);
       return l;
