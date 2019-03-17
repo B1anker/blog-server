@@ -29,7 +29,9 @@ export const AUTH = {
   privateKey: getPrivateKey(),
   publicKey: getPublicKey(),
   privateKeyPath: pathResolve('../private.key'),
-  publicKeyPath: pathResolve('../public.key')
+  publicKeyPath: pathResolve('../public.key'),
+  defaultAccount: 'admin',
+  defaultPassword: 'admin'
 };
 
 export const API = {

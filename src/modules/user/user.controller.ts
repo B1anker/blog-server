@@ -1,8 +1,11 @@
+import { AuthService } from '@/modules/auth/auth.service';
 import { UserService } from '@/modules/user/user.service';
 import {
   Body,
   Controller,
+  forwardRef,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -10,11 +13,15 @@ import {
 } from '@nestjs/common';
 import { pick } from 'lodash';
 
+import { AUTH } from '@/app.config';
 import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    @Inject(forwardRef(() => AuthService)) private readonly authService: AuthService) {
+    this.initDefaultUser();
+  }
 
   @Get()
   public findAll() {
@@ -76,5 +83,16 @@ export class UserController {
     return {
       message: 'ok',
     };
+  }
+
+  private async initDefaultUser () {
+    const users = await this.userService.findAll();
+    if (!users.length) {
+      const password = await this.authService.encryptRSA(AUTH.defaultPassword);
+      this.createUser({
+        account: AUTH.defaultAccount,
+        password
+      });
+    }
   }
 }
