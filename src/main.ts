@@ -12,12 +12,12 @@ import { generateRsa } from './utils/rsa';
 async function bootstrap() {
   generateRsa();
   const app = await NestFactory.create(AppModule);
-  app.useStaticAssets(path.join(__dirname, '../../blog/dist'));
-  // app.use(history({
-  //   rewrites: [
-  //     { from: /.*/, to: '/index.html' }
-  //   ]
-  // }));
+  app.useStaticAssets(path.join(__dirname, '../../blog'));
+  app.use(history({
+    rewrites: [
+      { from: /.*/, to: '/index.html' }
+    ]
+  }));
   // 设置接口全局前缀
   app.setGlobalPrefix(API.prefix);
   // 添加gzip压缩
