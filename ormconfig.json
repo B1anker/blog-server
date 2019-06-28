@@ -3,7 +3,7 @@
   "host": "database",
   "port": 3306,
   "username": "blog",
-  "password": "0931jiayou",
+  "password": "blog",
   "database": "blog",
   "entities": ["src/**/**.entity{.ts,.js}"],
   "synchronize": true,
