@@ -2,6 +2,8 @@ import * as fs from 'fs';
 
 import { pathResolve } from '@/utils/path';
 
+export const ENV = process.env.NODE_ENV;
+
 const getPrivateKey = (): string => {
   try {
     return fs.readFileSync(pathResolve('../private.key')).toString();
