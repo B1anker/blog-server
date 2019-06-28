@@ -17,7 +17,7 @@ async function bootstrap() {
       { from: /.*/, to: '/index.html' }
     ]
   }));
-  app.useStaticAssets(path.join(__dirname, '../../blog/dist'));
+  app.useStaticAssets(path.join(__dirname, process.env.NODE_ENV === 'development' ? '../../blog/dist' : '/root/blog/dist'));
   // 设置接口全局前缀
   app.setGlobalPrefix(API.prefix);
   // 添加gzip压缩
