@@ -10,13 +10,14 @@ import { AppModule } from './app.module';
 import { generateRsa } from './utils/rsa';
 
 async function bootstrap() {
-  console.log(`环境：${ENV}`);
+  console.log(`启动环境：${ENV}`);
   generateRsa();
   const app = await NestFactory.create(AppModule);
   app.use(history({
     rewrites: [
       { from: /.*/, to: '/index.html' }
-    ]
+    ],
+    htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
   }));
   app.useStaticAssets(ENV === 'development' ? path.join(__dirname, '../../blog/dist') : '/root/blog/dist');
   // 设置接口全局前缀
