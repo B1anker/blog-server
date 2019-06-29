@@ -1,4 +1,5 @@
 import LoggerMiddleware from '@/middlewares/logger';
+import { ArchivesModule } from '@/modules/archives/archives.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoryModule } from '@/modules/category/category.module';
 import { PostModule } from '@/modules/post/post.module';
@@ -13,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthModule,
     PostModule,
     CategoryModule,
+    ArchivesModule
   ],
 })
 export class AppModule implements NestModule {

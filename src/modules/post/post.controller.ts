@@ -1,5 +1,4 @@
 import { PostService } from '@/modules/post/post.service';
-import { RequestWithCookie } from '@/types';
 import {
   Body,
   Controller,
@@ -8,7 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Req,
   ValidationPipe
 } from '@nestjs/common';
 import { CreatePostDto, UpdatePostDto } from './post.dto';
