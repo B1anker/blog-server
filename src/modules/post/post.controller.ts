@@ -1,5 +1,16 @@
 import { PostService } from '@/modules/post/post.service';
-import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
+import { RequestWithCookie } from '@/types';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  ValidationPipe
+} from '@nestjs/common';
 import { CreatePostDto, UpdatePostDto } from './post.dto';
 
 @Controller('post')
@@ -10,7 +21,7 @@ export class PostController {
   public async findAll() {
     return {
       message: 'ok',
-      list: await this.postService.findAll(),
+      list: await this.postService.findAll()
     };
   }
 

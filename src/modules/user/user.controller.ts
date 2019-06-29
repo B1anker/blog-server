@@ -1,3 +1,4 @@
+import { RolesGuard } from '@/guards/roles';
 import { AuthService } from '@/modules/auth/auth.service';
 import { UserService } from '@/modules/user/user.service';
 import {
@@ -9,17 +10,25 @@ import {
   Param,
   Post,
   Put,
-  ValidationPipe,
+  Req,
+  UseGuards,
+  ValidationPipe
 } from '@nestjs/common';
 import { pick } from 'lodash';
+import { JwtAuthGuard } from '../auth/auth.guard';
+
+import { RequestWithCookie } from '@/types';
 
 import { AUTH } from '@/app.config';
-import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
+import { AccoutUpdateDto, CreateUserDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService,
-    @Inject(forwardRef(() => AuthService)) private readonly authService: AuthService) {
+  constructor(
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService
+  ) {
     this.initDefaultUser();
   }
 
@@ -27,7 +36,7 @@ export class UserController {
   public findAll() {
     return {
       message: 'ok',
-      data: this.userService.findAll(),
+      data: this.userService.findAll()
     };
   }
 
@@ -37,10 +46,7 @@ export class UserController {
     if (user) {
       return {
         message: 'ok',
-        data: pick(user, [
-          'account',
-          'roles'
-        ])
+        data: pick(user, ['account', 'roles'])
       };
     }
     return {
@@ -53,45 +59,30 @@ export class UserController {
   public createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return {
       message: 'ok',
-      data: this.userService.createUser(createUserDto),
+      data: this.userService.createUser(createUserDto)
     };
   }
 
-  @Put('account')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put()
   public async updateAccount(
-    @Body(new ValidationPipe()) accountDto: AccoutDto,
+    @Body(new ValidationPipe()) accountUpdateDto: AccoutUpdateDto,
+    @Req() req: RequestWithCookie
   ) {
-    await this.userService.updateAccount(accountDto);
+    await this.userService.updateAccount(accountUpdateDto, req.cookies.jwt);
     return {
-      message: 'ok',
+      message: 'ok'
     };
   }
 
-  @Put('password')
-  public async updatePassword(
-    @Body(new ValidationPipe()) passwordDto: PasswordDto,
-  ) {
-    await this.userService.updatePassword(passwordDto);
-    return {
-      message: 'ok',
-    };
-  }
-
-  @Put('role')
-  public async updateRole(@Body(new ValidationPipe()) roleDto: RoleDto) {
-    await this.userService.updateRole(roleDto);
-    return {
-      message: 'ok',
-    };
-  }
-
-  private async initDefaultUser () {
+  private async initDefaultUser() {
     const users = await this.userService.findAll();
     if (!users.length) {
       const password = await this.authService.encryptRSA(AUTH.defaultPassword);
       this.createUser({
         account: AUTH.defaultAccount,
-        password
+        password,
+        roles: AUTH.defaultRoles
       });
     }
   }

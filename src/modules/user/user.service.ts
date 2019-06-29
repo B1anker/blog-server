@@ -6,11 +6,11 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { AuthService } from '../auth/auth.service';
-import { AccoutDto, CreateUserDto, PasswordDto, RoleDto } from './user.dto';
+import { AccoutUpdateDto, CreateUserDto } from './user.dto';
 import { Users } from './user.entity';
 
 @Injectable()
@@ -18,8 +18,12 @@ export class UserService {
   constructor(
     @InjectRepository(Users) private readonly repository: Repository<Users>,
     @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {}
+
+  public isAdmin (roles: string[]) {
+    return roles.includes('ADMIN');
+  }
 
   public async findAll(): Promise<Users[]> {
     return await this.repository.find();
@@ -31,7 +35,7 @@ export class UserService {
       user = await this.repository.findOne(id);
     } else {
       user = await this.repository.findOne({
-        account: id,
+        account: id
       });
     }
     return user;
@@ -41,9 +45,9 @@ export class UserService {
     const user = new Users();
     Object.assign(user, omit(createUser, ['password']));
     user.password = await this.authService.encrypt(
-      this.authService.decryptRSA(createUser.password),
+      this.authService.decryptRSA(createUser.password)
     );
-    user.roles = user.roles || [];
+    user.roles = user.roles || ['VISITOR'];
     try {
       await this.repository.save(user);
     } catch (err) {
@@ -55,23 +59,40 @@ export class UserService {
     return omit(user, ['password', 'id']);
   }
 
-  public async updateAccount(accountDto: AccoutDto) {
-    const user = await this.find(accountDto.id);
-    user.account = accountDto.account;
-    await this.repository.save(user);
-  }
-
-  public async updatePassword(passwordDto: PasswordDto) {
-    const user = await this.find(passwordDto.id);
-    user.password = await this.authService.encrypt(
-      this.authService.decryptRSA(passwordDto.password),
-    );
-    await this.repository.save(user);
-  }
-
-  public async updateRole(roleDto: RoleDto) {
-    const user = await this.find(roleDto.id);
-    user.roles = roleDto.roles;
-    await this.repository.save(user);
+  public async updateAccount(
+    accountUpdateDto: AccoutUpdateDto,
+    jwtString: string
+    ) {
+    const jwt = this.authService.verifyJwt(jwtString);
+    const user = await this.find(accountUpdateDto.id);
+    const jwtUser = await this.find(jwt.id);
+    user.account = accountUpdateDto.account;
+    // 修改权限
+    if (Array.isArray(accountUpdateDto.roles) && accountUpdateDto.roles.length) {
+      // 管理员才有权限更新账号权限
+      if (jwtUser.roles.includes('ADMIN')) {
+        user.roles = accountUpdateDto.roles || user.roles;
+      } else {
+        throw new ForbiddenException('没有权限！');
+      }
+    }
+    // 修改密码
+    if (user.password !== accountUpdateDto.password) {
+      if (jwt.id !== accountUpdateDto.id && !this.isAdmin(jwtUser.roles)) {
+        throw new ForbiddenException('没有权限！');
+      } else if (accountUpdateDto.password) {
+        user.password = await this.authService.encrypt(
+          this.authService.decryptRSA(accountUpdateDto.password)
+        );
+      }
+    }
+    try {
+      await this.repository.save(user);
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        throw new ForbiddenException('用户名已存在！');
+      }
+      throw new InternalServerErrorException();
+    }
   }
 }

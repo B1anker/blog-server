@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -6,28 +6,24 @@ export class CreateUserDto {
 
   @IsString()
   readonly password: string;
-}
-
-export class AccoutDto {
-  @IsNumber()
-  readonly id: number;
-
-  @IsString()
-  readonly account: string;
-}
-
-export class PasswordDto {
-  @IsNumber()
-  readonly id: number;
-
-  @IsString()
-  readonly password: string;
-}
-
-export class RoleDto {
-  @IsNumber()
-  readonly id: number;
 
   @IsArray()
   readonly roles: string[];
+}
+
+export class AccoutUpdateDto {
+  @IsNumber()
+  readonly id: number;
+
+  @IsOptional()
+  @IsString()
+  readonly account: string;
+
+  @IsOptional()
+  @IsArray()
+  readonly roles: string[];
+
+  @IsOptional()
+  @IsString()
+  readonly password: string;
 }

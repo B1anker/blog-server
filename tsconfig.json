@@ -17,6 +17,7 @@
       "@/*": ["./src/*"],
       "src": ["./src"]
     },
+    "types": ["./src/types"]
   },
   "exclude": ["node_modules"]
 }

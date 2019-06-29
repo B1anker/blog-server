@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import dayjs from 'dayjs';
+import * as dayjs from 'dayjs';
 import { Request, Response } from 'express';
 import { pick } from 'lodash';
 import { AuthService } from './auth.service';
