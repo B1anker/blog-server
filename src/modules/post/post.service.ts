@@ -81,4 +81,11 @@ export class PostService {
     await this.repository.save(post);
     return post;
   }
+
+  public async view(id: string) {
+    const post = await this.find(id);
+    post.views++;
+    await this.repository.save(post);
+    return post;
+  }
 }

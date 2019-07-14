@@ -9,7 +9,7 @@ import {
   Put,
   ValidationPipe
 } from '@nestjs/common';
-import { CreatePostDto, UpdatePostDto } from './post.dto';
+import { CreatePostDto, UpdatePostDto, ViewDto } from './post.dto';
 
 @Controller('post')
 export class PostController {
@@ -34,6 +34,14 @@ export class PostController {
   @Post()
   public async create(@Body(new ValidationPipe()) post: CreatePostDto) {
     await this.postService.create(post);
+    return {
+      message: 'ok'
+    };
+  }
+
+  @Post('view')
+  public async view(@Body(new ValidationPipe()) view: ViewDto) {
+    await this.postService.view(view.id);
     return {
       message: 'ok'
     };

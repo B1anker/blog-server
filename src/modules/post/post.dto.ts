@@ -21,3 +21,8 @@ export class UpdatePostDto extends CreatePostDto {
   @IsString()
   readonly id: string;
 }
+
+export class ViewDto {
+  @IsString()
+  readonly id: string;
+}
