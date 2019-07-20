@@ -3,8 +3,13 @@ import * as fs from 'fs';
 import { pathResolve } from '@/utils/path';
 
 export const ENV = process.env.NODE_ENV;
-const privateKeyPath = pathResolve('../../confs/private.key');
-const publicKeyPath = pathResolve('../../confs/public.key');
+let privateKeyPath = pathResolve('../../confs/private.key');
+let publicKeyPath = pathResolve('../../confs/public.key');
+
+if (ENV === 'production') {
+  privateKeyPath = '/root/confs/private.key';
+  publicKeyPath = '/root/confs/public.key';
+}
 
 const getPrivateKey = (): string => {
   try {

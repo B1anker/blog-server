@@ -5,6 +5,6 @@ RUN npm install \
   && chmod +x /root/blog-server/setup.sh \
   && apt update \
   && apt install vim-tiny
-VOLUME  ["/root/blog-server/confs"]
+VOLUME  ["/root/confs"]
 EXPOSE 3000
 CMD ["sh", "/root/blog-server/setup.sh"]
