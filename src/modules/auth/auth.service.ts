@@ -79,7 +79,7 @@ export class AuthService {
   }
 
   public decryptRSA (encryptedRSAPassword: string): string {
-    const decrypted = this.rsa.decrypt(encryptedRSAPassword, 'base64');
+    const decrypted = this.rsa.decrypt(encryptedRSAPassword, 'utf8');
     return decrypted;
   }
 
