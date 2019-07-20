@@ -3,6 +3,7 @@ import { ArchivesModule } from '@/modules/archives/archives.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoryModule } from '@/modules/category/category.module';
 import { PostModule } from '@/modules/post/post.module';
+import { UploadModule } from '@/modules/upload/upload.module';
 import { UsersModule } from '@/modules/user/user.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     UsersModule,
     AuthModule,
     PostModule,
+    UploadModule,
     CategoryModule,
     ArchivesModule
   ],
