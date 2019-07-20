@@ -1,4 +1,4 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 
 import { AUTH } from '@/app.config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';

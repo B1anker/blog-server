@@ -3,10 +3,12 @@ import * as fs from 'fs';
 import { pathResolve } from '@/utils/path';
 
 export const ENV = process.env.NODE_ENV;
+const privateKeyPath = pathResolve('../../confs/private.key');
+const publicKeyPath = pathResolve('../../confs/public.key');
 
 const getPrivateKey = (): string => {
   try {
-    return fs.readFileSync(pathResolve('../private.key')).toString();
+    return fs.readFileSync(privateKeyPath).toString();
   } catch (err) {
     return '';
   }
@@ -14,7 +16,7 @@ const getPrivateKey = (): string => {
 
 const getPublicKey = (): string => {
   try {
-    return fs.readFileSync(pathResolve('../public.key')).toString();
+    return fs.readFileSync(publicKeyPath).toString();
   } catch (err) {
     return '';
   }
@@ -30,8 +32,8 @@ export const AUTH = {
   renew: 300,
   privateKey: getPrivateKey(),
   publicKey: getPublicKey(),
-  privateKeyPath: pathResolve('../private.key'),
-  publicKeyPath: pathResolve('../public.key'),
+  privateKeyPath,
+  publicKeyPath,
   defaultAccount: 'admin',
   defaultPassword: 'admin',
   defaultRoles: ['ADMIN', 'VISITOR']
