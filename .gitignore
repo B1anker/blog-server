@@ -4,4 +4,4 @@ package-lock.json
 src/private.key
 src/public.key
 dist
-keys
+confs
