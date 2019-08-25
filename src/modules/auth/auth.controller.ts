@@ -11,9 +11,10 @@ import {
   Inject,
   NotAcceptableException,
   Post,
+  Request,
   Res,
   UseGuards,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { UserService } from '../user/user.service';
@@ -26,7 +27,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
+    private readonly userService: UserService
   ) {}
 
   @Post('public')
@@ -81,15 +82,25 @@ export class AuthController {
   }
 
   @Post('check')
-  public async check(@Body() { token }) {
+  public async check(@Request() request) {
     try {
       return {
         message: 'ok',
-        data: this.authService.verifyJwt(token),
+        data: this.authService.verifyJwt(request.cookies.jwt),
       };
     } catch (err) {
       throw new NotAcceptableException('Verify Failed');
     }
+  }
+
+  @Post('logout')
+  public async logout(@Res() res: Response) {
+    res.clearCookie('jwt', {
+      maxAge: 0
+    });
+    res.send({
+      message: 'ok'
+    });
   }
 
   @Post('encrypt')
