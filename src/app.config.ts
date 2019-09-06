@@ -1,6 +1,5 @@
-import * as fs from 'fs';
-
 import { pathResolve } from '@/utils/path';
+import * as fs from 'fs';
 
 export const ENV = process.env.NODE_ENV;
 let privateKeyPath = pathResolve('../../confs/private.key');
@@ -31,6 +30,9 @@ export const updateAUTH = () => {
   AUTH.privateKey = getPrivateKey();
   AUTH.publicKey = getPublicKey();
 };
+
+export const staticAssetsPath =
+  ENV === 'development' ? pathResolve('../../../blog/dist') : '/root/blog/dist';
 
 export const AUTH = {
   expiresIn: 1000 * 60 * 15,

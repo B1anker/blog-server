@@ -1,4 +1,7 @@
 FROM node:10
+LABEL Version="1.0"
+LABEL Name="blog-server"
+LABEL Maintainer="b1anker"
 WORKDIR /root/blog-server
 COPY . .
 RUN npm install --registry=https://registry.npm.taobao.org \
