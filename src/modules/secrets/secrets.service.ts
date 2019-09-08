@@ -54,6 +54,7 @@ export class SecretsService {
       secret.deleted = false;
       await this.repository.save(secret);
     } catch (err) {
+      console.log(err);
       if (err.code === 'ER_DUP_ENTRY') {
         throw new InternalServerErrorException({
           status: 'ER_DUP_ENTRY',

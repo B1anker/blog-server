@@ -21,6 +21,6 @@ export class Secrets {
   @Column('int')
   updated: number;
 
-  @Column('text')
+  @Column({ type: 'varchar', default: '' })
   desc: string;
 }
