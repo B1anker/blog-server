@@ -1,14 +1,11 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
-  InternalServerErrorException,
-  Param,
-  Post,
   Put,
+  UseGuards,
   ValidationPipe
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { UpdateClientIndexDto } from './workflow.dto';
 import { WorkflowService } from './workflow.service';
 
@@ -16,6 +13,7 @@ import { WorkflowService } from './workflow.service';
 export class WorkflowController {
   constructor(private readonly workflowService: WorkflowService) {}
 
+  @UseGuards(AuthGuard('bearer'))
   @Put('/update/blog/index')
   public async updateBlogIndex(
     @Body(new ValidationPipe()) updateClientIndexDto: UpdateClientIndexDto

@@ -21,12 +21,13 @@ export class UserService {
     private readonly authService: AuthService
   ) {}
 
-  public isAdmin (roles: string[]) {
+  public isAdmin(roles: string[]) {
     return roles.includes('ADMIN');
   }
 
-  public async findAll(): Promise<Users[]> {
-    return await this.repository.find();
+  public async findAll(): Promise<Array<Omit<Users, 'deleted' | 'password'>>> {
+    const users = await this.repository.find();
+    return users.map((user) => omit(user, ['deleted', 'password']));
   }
 
   public async find(id: number | string): Promise<Users> {
@@ -62,13 +63,16 @@ export class UserService {
   public async updateAccount(
     accountUpdateDto: AccoutUpdateDto,
     jwtString: string
-    ) {
+  ) {
     const jwt = this.authService.verifyJwt(jwtString);
     const user = await this.find(accountUpdateDto.id);
     const jwtUser = await this.find(jwt.id);
     user.account = accountUpdateDto.account;
     // 修改权限
-    if (Array.isArray(accountUpdateDto.roles) && accountUpdateDto.roles.length) {
+    if (
+      Array.isArray(accountUpdateDto.roles) &&
+      accountUpdateDto.roles.length
+    ) {
       // 管理员才有权限更新账号权限
       if (jwtUser.roles.includes('ADMIN')) {
         user.roles = accountUpdateDto.roles || user.roles;

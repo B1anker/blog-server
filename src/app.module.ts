@@ -4,6 +4,7 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoryModule } from '@/modules/category/category.module';
 import { DockerModule } from '@/modules/docker/docker.module';
 import { PostModule } from '@/modules/post/post.module';
+import { SecretsModule } from '@/modules/secrets/secrets.module';
 import { UploadModule } from '@/modules/upload/upload.module';
 import { UsersModule } from '@/modules/user/user.module';
 import { WorkflowModule } from '@/modules/workflow/workflow.module';
@@ -12,7 +13,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_PORT),
+      database: 'blog',
+      username: 'blog',
+      password: process.env.MYSQL_PASSWORD,
+      entities: ['src/**/**.entity{.ts,.js}'],
+      synchronize: true
+    }),
     UsersModule,
     AuthModule,
     PostModule,
@@ -20,7 +30,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     CategoryModule,
     ArchivesModule,
     DockerModule,
-    WorkflowModule
+    WorkflowModule,
+    SecretsModule
   ]
 })
 export class AppModule implements NestModule {

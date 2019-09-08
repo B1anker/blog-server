@@ -22,7 +22,7 @@ import { RequestWithCookie } from '@/types';
 import { AUTH } from '@/app.config';
 import { AccoutUpdateDto, CreateUserDto } from './user.dto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -33,10 +33,10 @@ export class UserController {
   }
 
   @Get()
-  public findAll() {
+  public async findAll() {
     return {
       message: 'ok',
-      data: this.userService.findAll()
+      data: await this.userService.findAll()
     };
   }
 
