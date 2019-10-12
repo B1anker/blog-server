@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as dayjs from 'dayjs';
 import { Visit } from './analyze.entity';
 
 export interface Archive {
@@ -23,15 +24,18 @@ export class AnalyzeService {
   }
 
   public async updatePv(from: string) {
+    const date = dayjs().format('YYYY-MM-DD');
     let pv = await this.repository.findOne({
       type: 'pv',
-      from
+      from,
+      date
     });
     if (!pv) {
       pv = new Visit();
       pv.type = 'pv';
       pv.count = 1;
       pv.from = from;
+      pv.date = date;
     } else {
       pv.count++;
     }
@@ -45,15 +49,18 @@ export class AnalyzeService {
   }
 
   public async updateUv(from: string) {
+    const date = dayjs().format('YYYY-MM-DD');
     let uv = await this.repository.findOne({
       type: 'uv',
-      from
+      from,
+      date
     });
     if (!uv) {
       uv = new Visit();
       uv.type = 'uv';
       uv.count = 1;
       uv.from = from;
+      uv.date = date;
     } else {
       uv.count++;
     }

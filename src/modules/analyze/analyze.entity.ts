@@ -13,4 +13,7 @@ export class Visit {
 
   @Column('text')
   from: string;
+
+  @Column({ type: 'varchar', length: 10 })
+  date: string;
 }
