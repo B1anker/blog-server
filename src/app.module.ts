@@ -1,4 +1,5 @@
 import LoggerMiddleware from '@/middlewares/logger';
+import { AnalyzeModule } from '@/modules/analyze/analyze.module';
 import { ArchivesModule } from '@/modules/archives/archives.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { CategoryModule } from '@/modules/category/category.module';
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: ['src/**/**.entity{.ts,.js}'],
       synchronize: true
     }),
+    AnalyzeModule,
     UsersModule,
     AuthModule,
     PostModule,
