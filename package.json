@@ -29,7 +29,7 @@
     "bcrypt": "~3.0.3",
     "bson-objectid": "^1.2.4",
     "chalk": "^2.4.2",
-    "class-transformer": "^0.2.0",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.9.1",
     "compression": "^1.7.3",
     "connect-history-api-fallback": "^1.6.0",
